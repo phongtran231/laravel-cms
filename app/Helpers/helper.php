@@ -7,6 +7,18 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 
+if (!function_exists('_backend_assets')) {
+  /**
+   * get assets from backend
+   * @param $assetUrl
+   * @return string
+   */
+  function _backend_assets(string $assetUrl): string
+  {
+    return asset('backend/' . $assetUrl);
+  }
+}
+
 if (!function_exists('_get_all_posts_from_main_category')) {
   /**
    * @param MainCategory|string|int $category
@@ -32,12 +44,11 @@ if (!function_exists('_get_all_posts_from_main_category')) {
   }
 }
 
-
 if (!function_exists('_get_post_detail')) {
   /**
-   * @inheritDoc get post detail by slug or id
+   * get post detail by slug or id
    * @param string|int $param
-   * @return mixed
+   * @return null|mixed
    */
   function _get_post_detail($param)
   {
@@ -47,9 +58,9 @@ if (!function_exists('_get_post_detail')) {
     if (is_int($param)) {
       return Post::find($param);
     }
+    return null;
   }
 }
-
 
 if (!function_exists('_get_posts_with_paginate')) {
   /**
@@ -76,7 +87,6 @@ if (!function_exists('_get_all_posts')) {
     }
   }
 }
-
 
 if (!function_exists('_get_main_category_detail')) {
   /**
@@ -175,5 +185,17 @@ if (!function_exists('_get_all_sub_categories')) {
         });
       })->whereActive(true)->get();
     }
+  }
+}
+
+if (!function_exists('_get_from_cache')) {
+  /**
+   * @param string $table
+   * @param string $primaryKey
+   * @return mixed|null
+   */
+  function _get_from_cache(string $table, string $primaryKey)
+  {
+    return \App\Traits\ModelCacheAbleTrait::getCache($table, $primaryKey);
   }
 }
